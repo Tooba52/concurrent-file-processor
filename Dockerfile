@@ -1,4 +1,5 @@
 # Dockerfile, Image, Container
+#may need to add docker-compose for database
 
 #Base image
 FROM python:3.13.5-slim

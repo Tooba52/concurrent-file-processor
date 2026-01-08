@@ -1,0 +1,6 @@
+# Defines configuration constants
+
+ALLOWED_MIME_TYPES = {"application/json", "text/csv", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}
+MB = 1024 * 1024
+MAX_FILE_SIZE_BYTES = 50 * MB
+MAX_CONCURRENT_JOBS = 10
