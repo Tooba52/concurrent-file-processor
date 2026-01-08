@@ -1,32 +1,28 @@
-from fastapi import FastAPI, Body, HTTPException
-from pydantic import BaseModel
+from fastapi import FastAPI, HTTPException, UploadFile, File
+# from pydantic import BaseModel
+import json
 
 app = FastAPI()
 
-class File(BaseModel):
-    text: str = None
-    is_uploaded : bool = False
+# class File(BaseModel):
+#     text: str = None
+#     is_uploaded : bool = False
 
-files= []
+files = []
+
 
 @app.get("/") #Defines path for root
 def root():
     return {"Hello" : "World"}
 
-@app.post("/files") #add file to list
-def create_file(file: File = Body(..., embed=True)):
-    files.append(file)
-    return files
 
-@app.get("/files", response_model=list[File]) #return all files in list, default 10
-def list_files(limit:int = 10):
-    return files[0:limit]
-
-@app.get("/files/{file_id}", response_model=File) #return file based off its index in the list
-def get_file(file_id:int):
-    if file_id < len(files):
-        return files[file_id]
+@app.post("/upload") #endpoint for uploading a file
+async def upload_file(uploaded_file: UploadFile = File(...)):
+    if uploaded_file.content_type != "application/json" : #check type is correct
+        raise HTTPException(status_code=404, detail="Invalid document type")
     else:
-        raise HTTPException(status_code=404, detail="file not found")
-    
-## Test comment for branches/merging
+        data = await uploaded_file.read() #await - pause async function and resume when ready since reading is slow 
+        content = json.loads(data.decode("utf-8")) #convert bytes to json 
+    return {"content":content, "filename":uploaded_file.filename}
+
+
