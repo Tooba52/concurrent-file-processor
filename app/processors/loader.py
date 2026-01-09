@@ -5,7 +5,7 @@ from fastapi import UploadFile, HTTPException
 import pandas as pd
 from pandas import json_normalize
 import json
-
+from io import StringIO, BytesIO
 
 async def upload_file(uploaded_file: UploadFile):
     # File type check
@@ -24,20 +24,26 @@ async def upload_file(uploaded_file: UploadFile):
     elif uploaded_file.content_type == "text/csv":
         return csv_convertor(rawData)
     # Excel case
-    elif uploaded_file.content_type in ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]:
+    elif uploaded_file.content_type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
         return excel_convertor(rawData)
     
 # Conversion helper functions
 def json_convertor(rawData: bytes):
-    json_data = json.loads(rawData.decode("utf-8")) # converts bytes to string
-    try: #if directly convertibale 
+    json_data = json.loads(rawData.decode("utf-8")) # Converts bytes to string
+    try: #if directly convertible 
         dataFrame = pd.DataFrame(json_data)
-    except: #if not directly convertibale 
+    except: #if not directly convertible 
         dataFrame = json_normalize(json_data)
-    return dataFrame.to_dict(orient="records")
+    return dataFrame.to_dict(orient="records") # Dictionary format
 
 def csv_convertor(rawData: bytes):
-    pass
+    csv_data = rawData.decode('utf-8')
+    dataFrame = pd.read_csv(StringIO(csv_data), sep=";") #seperate the columns
+    return dataFrame.to_dict(orient="records")
 
+#fix (only do xlsx from now on, may need a library to read)
 def excel_convertor(rawData: bytes):
+    #excel_data = 
+    # dataFrame = pd.read_excel(excel_data)
+    # return dataFrame.to_dict(orient="records")
     pass
