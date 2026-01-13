@@ -2,6 +2,7 @@
 
 from fastapi import UploadFile, File, APIRouter
 from .processors.loader import upload_file
+from typing import Annotated
 
 router = APIRouter()
 
@@ -11,7 +12,10 @@ async def root():
     return {"Hello" : "World"}
 
 # File upload endpoint
-@router.post("/")
+@router.post("/uploadfiles")
 async def upload_file_endpoint(uploaded_file: UploadFile = File(...)):
-    result = await upload_file(uploaded_file)
-    return result
+    return await upload_file(uploaded_file)
+
+# async def upload_file_endpoint(files: list[UploadFile]):
+#     return {"filenames": [file.filename for file in files]}
+    

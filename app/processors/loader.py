@@ -43,7 +43,6 @@ def csv_convertor(rawData: bytes):
 
 #fix (only do xlsx from now on, may need a library to read)
 def excel_convertor(rawData: bytes):
-    #excel_data = 
-    # dataFrame = pd.read_excel(excel_data)
-    # return dataFrame.to_dict(orient="records")
-    pass
+    excel_data = BytesIO(rawData) #use BytesIO as decode wont work on binary bytes
+    dataFrame = pd.read_excel(excel_data, sheet_name=0)
+    return dataFrame.to_dict(orient="records")
