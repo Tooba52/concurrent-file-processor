@@ -1,4 +1,5 @@
 # Dockerfile, Image, Container
+#may need to add docker-compose for database
 
 #Base image
 FROM python:3.13.5-slim
@@ -19,4 +20,4 @@ COPY app/ .
 EXPOSE 8000
 
 # Run FastAPI with uvicorn
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
