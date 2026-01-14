@@ -34,15 +34,13 @@ def json_convertor(rawData: bytes):
         dataFrame = pd.DataFrame(json_data)
     except: #if not directly convertible 
         dataFrame = json_normalize(json_data)
-    return dataFrame.to_dict(orient="records") # Dictionary format
+    return dataFrame
 
 def csv_convertor(rawData: bytes):
     csv_data = rawData.decode('utf-8')
     dataFrame = pd.read_csv(StringIO(csv_data), sep=";") #seperate the columns
-    return dataFrame.to_dict(orient="records")
-
-#fix (only do xlsx from now on, may need a library to read)
+    return dataFrame
 def excel_convertor(rawData: bytes):
     excel_data = BytesIO(rawData) #use BytesIO as decode wont work on binary bytes
     dataFrame = pd.read_excel(excel_data, sheet_name=0)
-    return dataFrame.to_dict(orient="records")
+    return dataFrame

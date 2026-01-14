@@ -1,8 +1,7 @@
 #API endpoints links, https request -> functions -> https responses
 
-from fastapi import UploadFile, File, APIRouter, HTTPException
-from .processors.loader import upload_file
-from .processors.concurrency import concurrent_processing
+from fastapi import UploadFile, File, APIRouter, HTTPException, Query
+from .processors.exporter import export_to_csv, export_to_excel
 from .core.config import *
 
 router = APIRouter()
@@ -10,13 +9,14 @@ router = APIRouter()
 # Root endpoint
 @router.get("/")
 async def root():
-    return {"Hello" : "World"}
+    return {"message": "Concurrent File Processor API. Use /merge_files to upload and combine files."}
 
-
-@router.post("/uploadfiles")
-async def upload_files_endpoint(files: list[UploadFile] = File(...)):
+# Export uploaded files by selected format
+@router.post("/merge")
+async def merge_files(
+    files: list[UploadFile] = File(...),format: str = Query("excel", enum=["csv", "excel"])):
     if len(files) > MAX_UPLOADS:
-        raise HTTPException(status_code=400, detail=f"Too many files. Max allowed is {MAX_UPLOADS}.")
-    # Delegate processing to concurrency module
-    return await concurrent_processing(files)
-
+        raise HTTPException(f"Too many files. Max allowed is {MAX_UPLOADS}.")
+    if format == "csv":
+        return await export_to_csv(files)
+    return await export_to_excel(files)
