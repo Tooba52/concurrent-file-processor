@@ -15,8 +15,16 @@ async def root():
 @router.post("/merge")
 async def merge_files(
     files: list[UploadFile] = File(...),format: str = Query("excel", enum=["csv", "excel"])):
+
+    # Minimum uploads
+    if files == None or len(files) < MIN_UPLOADS:
+        raise HTTPException(status_code=400, detail="You must upload at least 2 files to merge.")
+    
+    # Max uploads
     if len(files) > MAX_UPLOADS:
-        raise HTTPException(f"Too many files. Max allowed is {MAX_UPLOADS}.")
+        raise HTTPException(status_code=400,detail="Too many files. Max allowed is {MAX_UPLOADS}.")
+    
+    # Export format
     if format == "csv":
         return await export_to_csv(files)
     return await export_to_excel(files)
