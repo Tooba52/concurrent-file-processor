@@ -1,34 +1,36 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, useEffect } from 'react'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [files, setFiles] = useState([]);
+  const [format, setFormat] = useState("Excel");
+
+  // Stores the selected files in state
+  const handleFileChange = (e) => {
+    setFiles(e.target.files);
+  }
+
+  // Sends files to backend, gets the merged file, triggers download
+  const handleUpload = (e) => {
+    //validate more then 2 files
+    //validate corrcet file type JSON CSV XLSX
+    //send files to API
+    //handle response 
+    //create temp link for download 
+
+  }
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMC
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <h1>File Merger</h1>
+      <input type="file" multiple onChange={handleFileChange} />
+      <select value={format} onChange={(e) => setFormat(e.target.value)}>
+        <option value="excel">Excel</option>
+        <option value="csv">CSV</option>
+      </select>
+      <button onClick={handleUpload}>Merge Files</button>
     </>
+
   )
 }
 

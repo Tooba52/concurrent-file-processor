@@ -9,7 +9,7 @@ router = APIRouter()
 # Root endpoint
 @router.get("/")
 async def root():
-    return {"message": "Concurrent File Processor API. Use /merge_files to upload and combine files."}
+    return {"message": "Concurrent File Processor API. Use /merge to upload and combine files."}
 
 # Export uploaded files by selected format
 @router.post("/merge")
