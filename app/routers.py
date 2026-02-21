@@ -22,9 +22,10 @@ async def merge_files(
     
     # Max uploads
     if len(files) > MAX_UPLOADS:
-        raise HTTPException(status_code=400,detail="Too many files. Max allowed is {MAX_UPLOADS}.")
+        raise HTTPException(status_code=400,detail=f"Too many files. Max allowed is {MAX_UPLOADS}.")
     
     # Export format
     if format == "csv":
         return await export_to_csv(files)
-    return await export_to_excel(files)
+    else:
+        return await export_to_excel(files)
